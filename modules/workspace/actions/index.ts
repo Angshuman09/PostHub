@@ -9,7 +9,7 @@ export const initializeWorkspace = async () => {
 
     if (!user) {
         return {
-            success: true,
+            success: false,
             error: "User not found"
         }
     }
@@ -51,3 +51,57 @@ export const initializeWorkspace = async () => {
         }
     }
 }
+
+export const getWorkspaces = async () => {
+    const user = await currUser();
+
+    if (!user) throw new Error("Unauthorized access");
+
+    const workspaces = await db.workspace.findMany({
+        where: {
+            OR: [
+                { ownerId: user.id },
+                {
+                    members: { some: { userId: user.id } }
+                }
+            ]
+        },
+        orderBy: {
+            createdAt: "asc"
+        }
+
+    })
+
+    return workspaces
+}
+
+export const createWorkspace = async (name: string) => {
+    const user = await currUser();
+    if (!user) throw new Error("unauthorized access");
+
+    const workspace = await db.workspace.create({
+        data: {
+            name,
+            ownerId: user.id,
+            members: {
+                create: {
+                    userId: user.id,
+                    role: MEMBER_ROLE.ADMIN
+                }
+            }
+        }
+    })
+    return workspace
+}
+
+export const getWorkspaceById = async (id: string) => {
+    const workspace = await db.workspace.findUnique({
+        where: {
+            id
+        },
+        include: {
+            members: true
+        }
+    })
+    return workspace
+} 

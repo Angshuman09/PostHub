@@ -1,15 +1,19 @@
 'use client'
-
 import { UserProps } from '@/modules/Layout/types';
 import React, { useState } from 'react';
 import { Search, Plus, Bell, Settings, ChevronDown, Rss } from 'lucide-react';
 import UserButton from '@/modules/authentication/components/user-button';
 import SearchBar from './search';
+import Workspace from './workspace';
+import InviteMembers from './invite-members';
 
-export default function Header({ user }: { user: UserProps }) {
+interface Props {
+    user: UserProps,
+}
 
+export default function Header({ user }: Props) {
     return (
-        <header className="bg-zinc-950 border-b border-zinc-800/50">
+        <header className="bg-zinc-950 border-b border-zinc-800/50 select-none">
             <div className="flex items-center justify-between px-6 py-3.5">
                 {/* Logo */}
                 <div className="flex items-center space-x-8">
@@ -22,42 +26,31 @@ export default function Header({ user }: { user: UserProps }) {
                         </span>
                     </div>
 
-                    {/* Navigation Links */}
-                    <nav className="hidden md:flex items-center space-x-1">
-                        <a href="#" className="px-3 py-1.5 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
-                            Home
-                        </a>
-                        <a href="#" className="px-3 py-1.5 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
-                            Workspaces
-                        </a>
-                        <a href="#" className="px-3 py-1.5 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
-                            APIs
-                        </a>
-                        <a href="#" className="px-3 py-1.5 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-md transition-colors">
-                            Collections
-                        </a>
-                    </nav>
+                    {/* Workspace Selector (Hoppscotch-style) */}
+                    <Workspace />
                 </div>
-
                 {/* Search Bar */}
                 <SearchBar />
 
                 {/* Right Section */}
                 <div className="flex items-center space-x-2">
                     {/* Invite Member Button */}
-                    <button className="flex items-center space-x-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors font-medium text-sm">
-                        <Plus className="w-4 h-4" />
-                        <span>Invite</span>
-                    </button>
+                    <InviteMembers />
 
                     {/* Notifications */}
-                    <button className="relative p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors">
+                    <button
+                        className="relative p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors"
+                        onMouseDown={(e) => e.preventDefault()}
+                    >
                         <Bell className="w-5 h-5" />
                         <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-600 rounded-full"></span>
                     </button>
 
                     {/* Settings */}
-                    <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors">
+                    <button
+                        className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors"
+                        onMouseDown={(e) => e.preventDefault()}
+                    >
                         <Settings className="w-5 h-5" />
                     </button>
 
